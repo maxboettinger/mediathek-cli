@@ -21,6 +21,7 @@ const log = console.log;
 
 export function showResults(results: any, pagination_limit: number) {
   let counter = 1;
+  let last_title = "";
 
   log(
     "\nShowing " +
@@ -28,7 +29,8 @@ export function showResults(results: any, pagination_limit: number) {
       " of " +
       chalk.bold(results.rss.channel.item.length) +
       " results for '" +
-      chalk.italic(results.rss.channel.description)
+      chalk.italic(results.rss.channel.description) +
+      "'"
   );
 
   results.rss.channel.item.forEach((element: any) => {
@@ -36,20 +38,25 @@ export function showResults(results: any, pagination_limit: number) {
       return;
     }
 
-    log("\n[" + counter + "] " + chalk.bold.underline("" + element.title + ""));
+    if (element.title != last_title) {
+      log(
+        "\n[" + counter + "] " + chalk.bold.underline("" + element.title + "")
+      );
 
-    log(
-      "Aus " +
-        chalk.white.bold(element.category) +
-        " in " +
-        chalk.white.bold(element["dc:creator"]) +
-        " vom " +
-        chalk.bold.white(moment(element.pubDate).format("DD.MM.YYYY HH:mm")) +
-        " Laufzeit: " +
-        chalk.bold.white((element.duration / 60).toFixed(2) + "m")
-    );
+      log(
+        "Aus " +
+          chalk.white.bold(element.category) +
+          " in " +
+          chalk.white.bold(element["dc:creator"]) +
+          " vom " +
+          chalk.bold.white(moment(element.pubDate).format("DD.MM.YYYY HH:mm")) +
+          " Laufzeit: " +
+          chalk.bold.white((element.duration / 60).toFixed(2) + "m")
+      );
 
-    counter++;
+      last_title = element.title;
+      counter++;
+    }
   });
 
   console.log("\n");
