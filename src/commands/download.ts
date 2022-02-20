@@ -1,7 +1,5 @@
 import type { Arguments, CommandBuilder } from "yargs";
-import { downloadFile, makeRequest } from "../modules/request";
-import { showResults } from "../modules/tui";
-import { parseXml } from "../modules/xml";
+import { downloadFile } from "../modules/request";
 
 type Options = {
   name: string;

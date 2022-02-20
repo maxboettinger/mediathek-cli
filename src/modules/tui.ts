@@ -19,47 +19,58 @@ import { default as moment, Moment } from "moment";
 import chalk from "chalk";
 const log = console.log;
 
-export function showResults(results: any) {
+export function showResults(results: any, pagination_limit: number) {
   let counter = 1;
 
   log(
-    "\n\n" +
-      chalk.bgGreen.white(
-        " Showing results for " +
-          chalk.bold.blue(results.rss.channel.description) +
-          " "
-      )
+    "\nShowing " +
+      chalk.bold(pagination_limit) +
+      " of " +
+      chalk.bold(results.rss.channel.item.length) +
+      " results for '" +
+      chalk.italic(results.rss.channel.description)
   );
 
   results.rss.channel.item.forEach((element: any) => {
-    if (counter > 5) {
+    if (counter > pagination_limit) {
       return;
     }
 
-    log(
-      "\n\n[" +
-        counter +
-        "] " +
-        chalk.bgWhite.black.bold(" " + element.title + " ")
-    );
+    log("\n[" + counter + "] " + chalk.bold.underline("" + element.title + ""));
 
     log(
       "Aus " +
-        chalk.white.italic(element.category) +
+        chalk.white.bold(element.category) +
         " in " +
-        chalk.white.italic(element["dc:creator"])
-    );
-
-    console.log(
-      "Vom " +
-        chalk.white(moment(element.pubDate).format("DD.MM.YYYY HH:mm")) +
+        chalk.white.bold(element["dc:creator"]) +
+        " vom " +
+        chalk.bold.white(moment(element.pubDate).format("DD.MM.YYYY HH:mm")) +
         " Laufzeit: " +
-        chalk.white((element.duration / 60).toFixed(2) + "m")
+        chalk.bold.white((element.duration / 60).toFixed(2) + "m")
     );
-
-    log("Link: " + chalk.gray(element.link));
-    log(chalk.gray.italic(element.description));
 
     counter++;
   });
+
+  console.log("\n");
+}
+
+export function showDetail(element: any) {
+  log("\n" + chalk.bold.underline("" + element.title + ""));
+
+  log(
+    "Aus " +
+      chalk.white.bold(element.category) +
+      " in " +
+      chalk.white.bold(element["dc:creator"]) +
+      " vom " +
+      chalk.bold.white(moment(element.pubDate).format("DD.MM.YYYY HH:mm")) +
+      " Laufzeit: " +
+      chalk.bold.white((element.duration / 60).toFixed(2) + "m")
+  );
+
+  log("Link: " + chalk.gray(element.link));
+  log("\n" + chalk.gray.italic(element.description));
+
+  console.log("\n");
 }

@@ -9,6 +9,6 @@ yargs(hideBin(process.argv))
   // Enable strict mode.
   .strict()
   // Useful aliases.
-  .alias({ h: "help" }).argv;
+  .alias({ h: "help", s: "search" }).argv;
 
 // https://medium.com/geekculture/building-a-node-js-cli-with-typescript-packaged-and-distributed-via-homebrew-15ba2fadcb81
