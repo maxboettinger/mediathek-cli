@@ -1,0 +1,26 @@
+{
+  "name": "mediathek-cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "local": "clear && npx tsc && chmod 700 ./build/cli.js && ./build/cli.js search 'Hannes und der Bürgermeister'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^17.0.18",
+    "@types/yargs": "^17.0.8",
+    "typescript": "^4.5.5"
+  },
+  "dependencies": {
+    "axios": "^0.26.0",
+    "chalk": "^4.1.2",
+    "fast-xml-parser": "^4.0.3",
+    "moment": "^2.29.1",
+    "signale": "^1.4.0",
+    "yargs": "^17.3.1"
+  }
+}
