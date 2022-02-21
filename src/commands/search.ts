@@ -1,4 +1,4 @@
-import type { Arguments, CommandBuilder } from "yargs";
+/*import type { Arguments, CommandBuilder } from "yargs";
 import { saveAsJson } from "../modules/local_fs";
 import { makeRequest } from "../modules/request";
 import { showResults } from "../modules/tui";
@@ -31,3 +31,4 @@ export const handler = async (argv: Arguments<Options>): Promise<void> => {
   //console.log("\n\n");
   process.exit(0);
 };
+*/

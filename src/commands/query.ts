@@ -1,7 +1,7 @@
 import type { Arguments, CommandBuilder } from "yargs";
 import { saveAsJson } from "../modules/local_fs";
 import { queryApi } from "../modules/request";
-import { showResults, show_apiResults } from "../modules/tui";
+import { show_apiResults } from "../modules/tui";
 
 type Options = {
   name: string;
@@ -12,23 +12,36 @@ export const command: string = "q <term>";
 export const desc: string = "Query mediathek API for <term>";
 
 export const builder: CommandBuilder<Options, Options> = (yargs) =>
-  yargs.positional("term", { type: "string", demandOption: true });
+  yargs
+    .positional("term", { type: "string", demandOption: true })
+    .option("page", { type: "string", demandOption: false })
+    .option("channel", { type: "string", demandOption: false });
 
 export const handler = async (argv: Arguments<Options>): Promise<void> => {
   // get argument values
-  const { term } = argv;
-  const pagination_limit = 15;
+  const { term, page, channel } = argv;
+  const page_option = page || 0;
+
+  const queries = [
+    {
+      fields: ["topic", "title"],
+      query: term,
+    },
+  ];
+
+  if (channel != undefined) {
+    queries.push({
+      fields: ["channel"],
+      query: channel,
+    });
+  }
+
   const query = {
-    queries: [
-      {
-        fields: ["topic", "title"],
-        query: term,
-      },
-    ],
+    queries: queries,
     sortBy: "timestamp",
     sortOrder: "desc",
     future: true,
-    offset: 0,
+    offset: page_option,
     //size: 10,
     duration_min: 0,
     duration_max: 99999,
@@ -36,7 +49,7 @@ export const handler = async (argv: Arguments<Options>): Promise<void> => {
 
   const api_result = await queryApi(query);
 
-  show_apiResults(api_result, pagination_limit);
+  show_apiResults(api_result, page_option);
 
   await saveAsJson(api_result);
 

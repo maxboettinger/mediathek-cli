@@ -36,13 +36,13 @@ import { default as moment, Moment } from "moment";
 import chalk from "chalk";
 const log = console.log;
 
-export function show_apiResults(api_response: any, pagination_limit: number) {
-  let counter = 1;
+export function show_apiResults(api_response: any, pagination: any) {
+  let counter = parseInt(pagination) + 1;
   let last_title = "";
 
   log(
     "\nShowing " +
-      chalk.bold(api_response.queryInfo.resultCount) +
+      chalk.bold(parseInt(pagination) + 1 + "-" + (parseInt(pagination) + 15)) +
       " of " +
       chalk.bold(api_response.queryInfo.totalResults) +
       " results found in " +
@@ -51,10 +51,6 @@ export function show_apiResults(api_response: any, pagination_limit: number) {
   );
 
   api_response.results.forEach((element: any) => {
-    if (counter > pagination_limit) {
-      return;
-    }
-
     //if (element.title != last_title) {
     if (true) {
       log(
@@ -74,49 +70,6 @@ export function show_apiResults(api_response: any, pagination_limit: number) {
           chalk.bold.white(
             moment(element.timestamp, "X").format("DD.MM.YYYY HH:mm")
           ) +
-          " Laufzeit: " +
-          chalk.bold.white((element.duration / 60).toFixed(2) + "m")
-      );
-
-      last_title = element.title;
-      counter++;
-    }
-  });
-
-  console.log("\n");
-}
-
-export function showResults(results: any, pagination_limit: number) {
-  let counter = 1;
-  let last_title = "";
-
-  log(
-    "\nShowing " +
-      chalk.bold(pagination_limit) +
-      " of " +
-      chalk.bold(results.rss.channel.item.length) +
-      " results for '" +
-      chalk.italic(results.rss.channel.description) +
-      "'"
-  );
-
-  results.rss.channel.item.forEach((element: any) => {
-    if (counter > pagination_limit) {
-      return;
-    }
-
-    if (element.title != last_title) {
-      log(
-        "\n[" + counter + "] " + chalk.bold.underline("" + element.title + "")
-      );
-
-      log(
-        "Aus " +
-          chalk.white.bold(element.category) +
-          " in " +
-          chalk.white.bold(element["dc:creator"]) +
-          " vom " +
-          chalk.bold.white(moment(element.pubDate).format("DD.MM.YYYY HH:mm")) +
           " Laufzeit: " +
           chalk.bold.white((element.duration / 60).toFixed(2) + "m")
       );
