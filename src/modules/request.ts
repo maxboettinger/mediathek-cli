@@ -25,6 +25,32 @@ export function makeRequest(term: any): Promise<any> {
   });
 }
 
+export function queryApi(query: any): Promise<any> {
+  return new Promise(async (resolve, reject) => {
+    //signale.pending("Searching for '%s'", term);
+
+    try {
+      const { data } = await axios({
+        method: "post",
+        url: "https://mediathekviewweb.de/api/query",
+        data: JSON.stringify(query),
+        headers: { "Content-Type": "text/plain" },
+      });
+
+      //console.log(data.result);
+
+      resolve(data.result);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        signale.fatal(new Error("Unable to make request"));
+        reject(error);
+      } else {
+        reject(error);
+      }
+    }
+  });
+}
+
 export function downloadFile(user_path: any, url: any): Promise<any> {
   return new Promise(async (resolve, reject) => {
     signale.pending("Starting download for '%s'", url);

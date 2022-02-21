@@ -19,7 +19,7 @@ export function loadFromJson(id: any): Promise<any> {
       let json_data = fs.readFileSync(path, "utf8");
       json_data = JSON.parse(json_data);
 
-      resolve(json_data.item[parseInt(id) + -1]);
+      resolve(json_data.results[parseInt(id) + -1]);
     } catch (err) {
       console.error(err);
       reject(err);
