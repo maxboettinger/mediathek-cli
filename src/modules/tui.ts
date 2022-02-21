@@ -77,6 +77,7 @@ export function showDetail(element: any) {
   );
 
   log("Link: " + chalk.gray(element.link));
+  log("Web: " + chalk.gray(element.websiteUrl));
   log("\n" + chalk.gray.italic(element.description));
 
   console.log("\n");
