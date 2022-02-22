@@ -1,5 +1,6 @@
 const fs = require("fs");
-const path = "./search.json";
+const homedir = require("os").homedir();
+const path = homedir + "/.mediathek_cli.json";
 
 export function saveAsJson(data: any): Promise<any> {
   return new Promise(async (resolve, reject) => {
