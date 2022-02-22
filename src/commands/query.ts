@@ -1,5 +1,5 @@
 import type { Arguments, CommandBuilder } from "yargs";
-import { saveAsJson } from "../modules/local_fs";
+import { save_history } from "../modules/local_fs";
 import { queryApi } from "../modules/request";
 import { show_apiResults } from "../modules/tui";
 
@@ -62,7 +62,7 @@ export const handler = async (argv: Arguments<Options>): Promise<void> => {
 
   show_apiResults(api_result, page_option);
 
-  await saveAsJson(api_result);
+  await save_history(api_result);
 
   // done
   //console.log("\n\n");

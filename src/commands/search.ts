@@ -1,5 +1,5 @@
 /*import type { Arguments, CommandBuilder } from "yargs";
-import { saveAsJson } from "../modules/local_fs";
+import { save_history } from "../modules/local_fs";
 import { makeRequest } from "../modules/request";
 import { showResults } from "../modules/tui";
 import { parseXml } from "../modules/xml";
@@ -25,7 +25,7 @@ export const handler = async (argv: Arguments<Options>): Promise<void> => {
 
   showResults(json_result, pagination_limit);
 
-  await saveAsJson(json_result.rss.channel);
+  await save_history(json_result.rss.channel);
 
   // done
   //console.log("\n\n");

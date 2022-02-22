@@ -1,5 +1,5 @@
 import type { Arguments, CommandBuilder } from "yargs";
-import { loadFromJson, saveAsJson } from "../modules/local_fs";
+import { load_history } from "../modules/local_fs";
 import { showDetail } from "../modules/tui";
 type Options = {
   name: string;
@@ -15,7 +15,7 @@ export const builder: CommandBuilder<Options, Options> = (yargs) =>
 export const handler = async (argv: Arguments<Options>): Promise<void> => {
   // get argument values
   const { id } = argv;
-  const item_detail = await loadFromJson(id);
+  const item_detail = await load_history(id);
 
   showDetail(item_detail);
 

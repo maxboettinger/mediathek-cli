@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc && chmod 700 ./build/cli.js && echo 'build done!'",
-    "local": "clear && npx tsc && chmod 700 ./build/cli.js && ./build/cli.js q 'Hannes und der Bürgermeister'"
+    "local": "clear && npx tsc && chmod 700 ./build/cli.js && ./build/cli.js q --topic 'Hannes und der Bürgermeister'"
   },
   "keywords": [],
   "author": "",

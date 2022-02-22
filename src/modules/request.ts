@@ -51,11 +51,11 @@ export function queryApi(query: any): Promise<any> {
   });
 }
 
-export function downloadFile(user_path: any, url: any): Promise<any> {
+export function downloadFile(user_path: any, item_detail: any): Promise<any> {
   return new Promise(async (resolve, reject) => {
-    signale.pending("Starting download for '%s'", url);
+    signale.pending("Starting download for '%s'", item_detail.url_video_hd);
 
-    https.get(url, (res: any) => {
+    https.get(item_detail.url_video_hd, (res: any) => {
       const path = user_path + "file.mp4";
       const writeStream = fs.createWriteStream(path);
 
