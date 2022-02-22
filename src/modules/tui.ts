@@ -84,6 +84,10 @@ export function show_apiResults(
           chalk.bold.white((element.duration / 60).toFixed(2) + "m")
       );
 
+      if (limit < 2) {
+        log("FHD: " + chalk.gray(element.url_video_hd));
+      }
+
       last_title = element.title;
       counter++;
     }
