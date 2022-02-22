@@ -18,13 +18,15 @@ export const builder: CommandBuilder<Options, Options> = (yargs) =>
     .option("topic", { type: "string", demandOption: false })
     .option("page", { type: "string", demandOption: false })
     .option("channel", { type: "string", demandOption: false })
-    .option("duration", { type: "number", demandOption: false });
+    .option("duration", { type: "number", demandOption: false })
+    .option("limit", { type: "number", demandOption: false });
 
 export const handler = async (argv: Arguments<Options>): Promise<void> => {
   // get argument values
-  const { title, topic, page, channel, duration } = argv;
+  const { title, topic, page, channel, duration, limit } = argv;
   const page_option = page || 0;
   const dur_option = duration || 0;
+  const limit_option = limit || 15;
 
   const queries = [];
 
@@ -60,7 +62,7 @@ export const handler = async (argv: Arguments<Options>): Promise<void> => {
 
   const api_result = await queryApi(query);
 
-  show_apiResults(api_result, page_option);
+  show_apiResults(api_result, page_option, limit_option);
 
   await save_history(api_result);
 

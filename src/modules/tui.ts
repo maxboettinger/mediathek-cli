@@ -36,13 +36,19 @@ import { default as moment, Moment } from "moment";
 import chalk from "chalk";
 const log = console.log;
 
-export function show_apiResults(api_response: any, pagination: any) {
+export function show_apiResults(
+  api_response: any,
+  pagination: any,
+  limit: any
+) {
   let counter = parseInt(pagination) + 1;
   let last_title = "";
 
   log(
     "\nShowing " +
-      chalk.bold(parseInt(pagination) + 1 + "-" + (parseInt(pagination) + 15)) +
+      chalk.bold(
+        parseInt(pagination) + 1 + "-" + (parseInt(pagination) + limit)
+      ) +
       " of " +
       chalk.bold(api_response.queryInfo.totalResults) +
       " results found in " +
@@ -51,6 +57,10 @@ export function show_apiResults(api_response: any, pagination: any) {
   );
 
   api_response.results.forEach((element: any) => {
+    if (counter > limit) {
+      return;
+    }
+
     //if (element.title != last_title) {
     if (true) {
       log(
