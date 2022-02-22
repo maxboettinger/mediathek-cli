@@ -7,8 +7,8 @@ type Options = {
   upper: boolean | undefined;
 };
 
-export const command: string = "download <path> <id>";
-export const desc: string = "Download file from <id>";
+export const command: string = "download <id> <path>";
+export const desc: string = "Download file with <id> <path>";
 
 export const builder: CommandBuilder<Options, Options> = (yargs) =>
   yargs
