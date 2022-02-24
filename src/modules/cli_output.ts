@@ -1,19 +1,4 @@
 /**
- * 
- {
-  title: 'Märchen',
-  description: 'Hannes übernimmt eine Videothek in seinem Bestreben nach Nebentätigkeit. Was er allerdings für Filme verleiht, das weiß weder er, noch der Bürgermeister.',
-  link: 'https://pdodswr-a.akamaihd.net/swrfernsehen/hannes-und-der-buergermeister/1548125.xxl.mp4',
-  guid: 'DuNE57grLJbic8iJM7xztqJnN5v3LBvlbV9GaQiECds=',
-  category: 'Hannes und der Bürgermeister',
-  'dc:creator': 'SWR',
-  pubDate: 'Fri, 15 Oct 2021 06:20:00 GMT',
-  enclosure: '',
-  duration: 896,
-  websiteUrl: 'https://www.ardmediathek.de/video/Y3JpZDovL3N3ci5kZS9hZXgvbzE1NDgxMjU'
-}
- * 
-
     {
       channel: 'ARD',
       topic: 'Hannes und der Bürgermeister',
@@ -32,8 +17,8 @@
     },
  */
 
-import { default as moment, Moment } from "moment";
-import chalk from "chalk";
+import * as moment from "moment";
+import * as chalk from "chalk";
 const log = console.log;
 
 export function show_apiResults(

@@ -1,72 +1,77 @@
-import type { Arguments, CommandBuilder } from "yargs";
-import { save_history } from "../modules/local_fs";
+import { Command, Flags } from "@oclif/core";
+import { show_apiResults } from "../modules/cli_output";
+import { save_history } from "../modules/fs";
 import { queryApi } from "../modules/request";
-import { show_apiResults } from "../modules/tui";
 
-type Options = {
-  name: string;
-  upper: boolean | undefined;
-};
+export default class Query extends Command {
+  static description = "describe the command here";
 
-export const command: string = "q";
-export const desc: string = "Query mediathek API for <term>";
+  static examples = ["<%= config.bin %> <%= command.id %>"];
 
-export const builder: CommandBuilder<Options, Options> = (yargs) =>
-  yargs
-    //.positional("term", { type: "string", demandOption: true })
-    .option("title", { type: "string", demandOption: false })
-    .option("topic", { type: "string", demandOption: false })
-    .option("page", { type: "string", demandOption: false })
-    .option("channel", { type: "string", demandOption: false })
-    .option("duration", { type: "number", demandOption: false })
-    .option("limit", { type: "number", demandOption: false });
-
-export const handler = async (argv: Arguments<Options>): Promise<void> => {
-  // get argument values
-  const { title, topic, page, channel, duration, limit } = argv;
-  const page_option = page || 0;
-  const dur_option = duration || 0;
-  const limit_option = limit || 15;
-
-  const queries = [];
-
-  if (title != undefined) {
-    queries.push({
-      fields: ["title"],
-      query: title,
-    });
-  }
-  if (topic != undefined) {
-    queries.push({
-      fields: ["topic"],
-      query: topic,
-    });
-  }
-  if (channel != undefined) {
-    queries.push({
-      fields: ["channel"],
-      query: channel,
-    });
-  }
-
-  const query = {
-    queries: queries,
-    sortBy: "timestamp",
-    sortOrder: "desc",
-    future: true,
-    offset: page_option,
-    //size: 10,
-    duration_min: dur_option,
-    duration_max: 99999,
+  static flags = {
+    title: Flags.string({ char: "t", description: "title to query" }),
+    topic: Flags.string({ char: "s", description: "topic (sendung) to query" }),
+    channel: Flags.string({ char: "c", description: "channel to query" }),
+    limit: Flags.string({
+      char: "l",
+      description: "limit amounts of displayed results",
+    }),
   };
 
-  const api_result = await queryApi(query);
+  static args = [];
 
-  show_apiResults(api_result, page_option, limit_option);
+  public async run(): Promise<void> {
+    const { args, flags } = await this.parse(Query);
 
-  await save_history(api_result);
+    // generate query
+    const query = await this.build_query(flags);
 
-  // done
-  //console.log("\n\n");
-  process.exit(0);
-};
+    // request API with query
+    const api_result = await queryApi(query);
+
+    // print results to terminal
+    show_apiResults(api_result, 0, flags.limit);
+
+    // save results in history
+    await save_history(api_result);
+  }
+
+  /**
+   * build_query
+   */
+  public build_query(flags: any) {
+    return new Promise((resolve, reject) => {
+      const queries = [];
+
+      if (flags.title != undefined) {
+        queries.push({
+          fields: ["title"],
+          query: flags.title,
+        });
+      }
+      if (flags.topic != undefined) {
+        queries.push({
+          fields: ["topic"],
+          query: flags.topic,
+        });
+      }
+      if (flags.channel != undefined) {
+        queries.push({
+          fields: ["channel"],
+          query: flags.channel,
+        });
+      }
+
+      resolve({
+        queries: queries,
+        sortBy: "timestamp",
+        sortOrder: "desc",
+        future: true,
+        offset: 0,
+        //size: 10,
+        duration_min: 0,
+        duration_max: 99999,
+      });
+    });
+  }
+}

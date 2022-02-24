@@ -1,25 +1,28 @@
-import type { Arguments, CommandBuilder } from "yargs";
-import { load_history } from "../modules/local_fs";
-import { showDetail } from "../modules/tui";
-type Options = {
-  name: string;
-  upper: boolean | undefined;
-};
+import { Command, Flags } from "@oclif/core";
+import { showDetail } from "../modules/cli_output";
+import { load_history } from "../modules/fs";
 
-export const command: string = "d <id>";
-export const desc: string = "Inspect search result <id>";
+export default class Detail extends Command {
+  static description = "describe the command here";
 
-export const builder: CommandBuilder<Options, Options> = (yargs) =>
-  yargs.positional("id", { type: "string", demandOption: true });
+  static examples = ["<%= config.bin %> <%= command.id %>"];
 
-export const handler = async (argv: Arguments<Options>): Promise<void> => {
-  // get argument values
-  const { id } = argv;
-  const item_detail = await load_history(id);
+  static flags = {
+    /*id: Flags.string({
+      char: "i",
+      description: "id of result to display details for",
+    }),*/
+  };
 
-  showDetail(item_detail);
+  static args = [{ name: "id" }];
 
-  // done
-  //console.log("\n\n");
-  process.exit(0);
-};
+  public async run(): Promise<void> {
+    const { args, flags } = await this.parse(Detail);
+
+    // read details from history json file
+    const item_detail = await load_history(args.id);
+
+    // print details to terminal
+    showDetail(item_detail);
+  }
+}
