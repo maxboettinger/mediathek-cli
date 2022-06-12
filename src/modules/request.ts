@@ -2,28 +2,7 @@ import axios from "axios";
 const https = require("https");
 const fs = require("fs");
 const signale = require("signale");
-const api_url = "https://mediathekviewweb.de/feed?query=";
-
-export function makeRequest(term: any): Promise<any> {
-  return new Promise(async (resolve, reject) => {
-    //signale.pending("Searching for '%s'", term);
-
-    try {
-      const { data } = await axios.get(api_url + term);
-
-      //signale.success("Got results from mediathek api!");
-
-      resolve(data);
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        signale.fatal(new Error("Unable to make request"));
-        reject(error);
-      } else {
-        reject(error);
-      }
-    }
-  });
-}
+const api_url = "https://mediathekviewweb.de/api/query";
 
 export function queryApi(query: any): Promise<any> {
   return new Promise(async (resolve, reject) => {
@@ -32,7 +11,7 @@ export function queryApi(query: any): Promise<any> {
     try {
       const { data } = await axios({
         method: "post",
-        url: "https://mediathekviewweb.de/api/query",
+        url: api_url,
         data: JSON.stringify(query),
         headers: { "Content-Type": "text/plain" },
       });
