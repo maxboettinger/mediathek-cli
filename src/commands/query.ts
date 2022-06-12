@@ -22,6 +22,14 @@ export default class Query extends Command {
       description: "use pagination for last query",
       default: 0,
     }),
+    dmin: Flags.integer({
+      description: "minimum duration (in minutes)",
+      default: 0,
+    }),
+    dmax: Flags.integer({
+      description: "maximum duration (in minutes)",
+      default: 99999,
+    }),
     sortBy: Flags.string({
       description:
         "define the parameter for sorting. Supported: timestamp; duration",
@@ -58,7 +66,7 @@ export default class Query extends Command {
     draw_table(api_result, flags.page, flags.limit);
 
     // save results in history
-    await save_history(api_result);
+    await save_history(api_result, flags.page, flags.limit);
   }
 
   /**
@@ -94,8 +102,8 @@ export default class Query extends Command {
         future: flags.future,
         offset: flags.page * flags.limit,
         size: flags.limit,
-        duration_min: 0,
-        duration_max: 99999,
+        duration_min: flags.dmin * 60,
+        duration_max: flags.dmax * 60,
       });
     });
   }
