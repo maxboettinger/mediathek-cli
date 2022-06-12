@@ -1,6 +1,6 @@
 {
   "name": "mediathek-cli",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "OER mediathek-cli",
   "author": "Max @maxboettinger",
   "bin": {

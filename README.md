@@ -16,11 +16,11 @@ oclif example Hello World CLI
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g mediathek
+$ npm install -g mediathek-cli
 $ media COMMAND
 running command...
 $ media (--version)
-mediathek/0.0.0 darwin-arm64 node-v16.1.0
+mediathek-cli/0.1.0 linux-x64 node-v16.10.0
 $ media --help [COMMAND]
 USAGE
   $ media COMMAND
@@ -29,55 +29,26 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`media hello PERSON`](#media-hello-person)
-* [`media hello world`](#media-hello-world)
+* [`media detail [ID]`](#media-detail-id)
 * [`media help [COMMAND]`](#media-help-command)
-* [`media plugins`](#media-plugins)
-* [`media plugins:inspect PLUGIN...`](#media-pluginsinspect-plugin)
-* [`media plugins:install PLUGIN...`](#media-pluginsinstall-plugin)
-* [`media plugins:link PLUGIN`](#media-pluginslink-plugin)
-* [`media plugins:uninstall PLUGIN...`](#media-pluginsuninstall-plugin)
-* [`media plugins update`](#media-plugins-update)
+* [`media query`](#media-query)
 
-## `media hello PERSON`
+## `media detail [ID]`
 
-Say hello
+show detailed information for a specific mediathek entry
 
 ```
 USAGE
-  $ media hello [PERSON] -f <value>
-
-ARGUMENTS
-  PERSON  Person to say hello to
-
-FLAGS
-  -f, --from=<value>  (required) Whom is saying hello
+  $ media detail [ID]
 
 DESCRIPTION
-  Say hello
+  show detailed information for a specific mediathek entry
 
 EXAMPLES
-  $ oex hello friend --from oclif
-  hello friend from oclif! (./src/commands/hello/index.ts)
+  $ media detail
 ```
 
-_See code: [dist/commands/hello/index.ts](https://github.com/maxboettinger/oclif-mediathek/blob/v0.0.0/dist/commands/hello/index.ts)_
-
-## `media hello world`
-
-Say hello world
-
-```
-USAGE
-  $ media hello world
-
-DESCRIPTION
-  Say hello world
-
-EXAMPLES
-  $ oex hello world
-  hello world! (./src/commands/hello/world.ts)
-```
+_See code: [dist/commands/detail.ts](https://github.com/maxboettinger/mediathek-cli/blob/v0.1.0/dist/commands/detail.ts)_
 
 ## `media help [COMMAND]`
 
@@ -97,151 +68,37 @@ DESCRIPTION
   Display help for media.
 ```
 
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.11/src/commands/help.ts)_
+_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.12/src/commands/help.ts)_
 
-## `media plugins`
+## `media query`
 
-List installed plugins.
+query the mediathek
 
 ```
 USAGE
-  $ media plugins [--core]
+  $ media query [-t <value>] [-s <value>] [-c <value>] [-l <value>] [-p <value>] [--dmin <value>] [--dmax
+    <value>] [--sortBy timestamp|duration] [--sortOrder desc|asc] [--future]
 
 FLAGS
-  --core  Show core plugins.
+  -c, --channel=<value>  channel to query
+  -l, --limit=<value>    [default: 15] limit amounts of displayed results
+  -p, --page=<value>     use pagination for last query
+  -s, --topic=<value>    topic (sendung) to query
+  -t, --title=<value>    title to query
+  --dmax=<value>         [default: 99999] maximum duration (in minutes)
+  --dmin=<value>         minimum duration (in minutes)
+  --future               choose to allow future shows to be included in results
+  --sortBy=<option>      [default: timestamp] define the parameter for sorting. Supported: timestamp; duration
+                         <options: timestamp|duration>
+  --sortOrder=<option>   [default: desc] define the sorting order
+                         <options: desc|asc>
 
 DESCRIPTION
-  List installed plugins.
+  query the mediathek
 
 EXAMPLES
-  $ media plugins
+  $ media query
 ```
 
-_See code: [@oclif/plugin-plugins](https://github.com/oclif/plugin-plugins/blob/v2.0.11/src/commands/plugins/index.ts)_
-
-## `media plugins:inspect PLUGIN...`
-
-Displays installation properties of a plugin.
-
-```
-USAGE
-  $ media plugins:inspect PLUGIN...
-
-ARGUMENTS
-  PLUGIN  [default: .] Plugin to inspect.
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Displays installation properties of a plugin.
-
-EXAMPLES
-  $ media plugins:inspect myplugin
-```
-
-## `media plugins:install PLUGIN...`
-
-Installs a plugin into the CLI.
-
-```
-USAGE
-  $ media plugins:install PLUGIN...
-
-ARGUMENTS
-  PLUGIN  Plugin to install.
-
-FLAGS
-  -f, --force    Run yarn install with force flag.
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Installs a plugin into the CLI.
-
-  Can be installed from npm or a git url.
-
-  Installation of a user-installed plugin will override a core plugin.
-
-  e.g. If you have a core plugin that has a 'hello' command, installing a user-installed plugin with a 'hello' command
-  will override the core plugin implementation. This is useful if a user needs to update core plugin functionality in
-  the CLI without the need to patch and update the whole CLI.
-
-ALIASES
-  $ media plugins add
-
-EXAMPLES
-  $ media plugins:install myplugin 
-
-  $ media plugins:install https://github.com/someuser/someplugin
-
-  $ media plugins:install someuser/someplugin
-```
-
-## `media plugins:link PLUGIN`
-
-Links a plugin into the CLI for development.
-
-```
-USAGE
-  $ media plugins:link PLUGIN
-
-ARGUMENTS
-  PATH  [default: .] path to plugin
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Links a plugin into the CLI for development.
-
-  Installation of a linked plugin will override a user-installed or core plugin.
-
-  e.g. If you have a user-installed or core plugin that has a 'hello' command, installing a linked plugin with a 'hello'
-  command will override the user-installed or core plugin implementation. This is useful for development work.
-
-EXAMPLES
-  $ media plugins:link myplugin
-```
-
-## `media plugins:uninstall PLUGIN...`
-
-Removes a plugin from the CLI.
-
-```
-USAGE
-  $ media plugins:uninstall PLUGIN...
-
-ARGUMENTS
-  PLUGIN  plugin to uninstall
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Removes a plugin from the CLI.
-
-ALIASES
-  $ media plugins unlink
-  $ media plugins remove
-```
-
-## `media plugins update`
-
-Update installed plugins.
-
-```
-USAGE
-  $ media plugins update [-h] [-v]
-
-FLAGS
-  -h, --help     Show CLI help.
-  -v, --verbose
-
-DESCRIPTION
-  Update installed plugins.
-```
+_See code: [dist/commands/query.ts](https://github.com/maxboettinger/mediathek-cli/blob/v0.1.0/dist/commands/query.ts)_
 <!-- commandsstop -->
