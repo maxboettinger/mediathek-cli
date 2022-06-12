@@ -18,7 +18,7 @@ $ npm install -g mediathek-cli
 $ media COMMAND
 running command...
 $ media (--version)
-mediathek-cli/0.2.0 linux-x64 node-v16.10.0
+mediathek-cli/0.2.1 linux-x64 node-v16.10.0
 $ media --help [COMMAND]
 USAGE
   $ media COMMAND
@@ -27,11 +27,11 @@ USAGE
 <!-- usagestop -->
 # Commands
 <!-- commands -->
-* [`media detail [ID]`](#media-detail-id)
+* [`media detail ID`](#media-detail-id)
 * [`media help [COMMAND]`](#media-help-command)
 * [`media query QUERY`](#media-query-query)
 
-## `media detail [ID]`
+## `media detail ID`
 
 show detailed information for a specific mediathek entry
 
@@ -39,14 +39,17 @@ show detailed information for a specific mediathek entry
 USAGE
   $ media detail [ID]
 
+ARGUMENTS
+  ID  :number - the respective Entry ID of the last query to show details for
+
 DESCRIPTION
   show detailed information for a specific mediathek entry
 
 EXAMPLES
-  $ media detail
+  $ media detail 4
 ```
 
-_See code: [dist/commands/detail.ts](https://github.com/maxboettinger/mediathek-cli/blob/v0.2.0/dist/commands/detail.ts)_
+_See code: [dist/commands/detail.ts](https://github.com/maxboettinger/mediathek-cli/blob/v0.2.1/dist/commands/detail.ts)_
 
 ## `media help [COMMAND]`
 
@@ -98,8 +101,10 @@ DESCRIPTION
   query the mediathek
 
 EXAMPLES
-  $ media query
+  $ media query tagesschau -c ARD -t "20:00 Uhr"
+
+  $ media query "Wetten, dass..?" -c ZDF --dmin 30
 ```
 
-_See code: [dist/commands/query.ts](https://github.com/maxboettinger/mediathek-cli/blob/v0.2.0/dist/commands/query.ts)_
+_See code: [dist/commands/query.ts](https://github.com/maxboettinger/mediathek-cli/blob/v0.2.1/dist/commands/query.ts)_
 <!-- commandsstop -->
