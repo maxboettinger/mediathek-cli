@@ -3,9 +3,9 @@ mediathek-cli
 
 an (under development!) CLI for querying the awesome [MediathekViewWeb](https://github.com/mediathekview/mediathekviewweb) project.
 
-[![Version](https://img.shields.io/npm/v/oclif-hello-world.svg)](https://www.npmjs.com/package/mediathek-cli)
-[![Downloads/week](https://img.shields.io/npm/dw/oclif-hello-world.svg)](https://www.npmjs.com/package/mediathek-cli)
-[![License](https://img.shields.io/npm/l/oclif-hello-world.svg)](https://github.com/maxboettinger/mediathek-cli/blob/master/package.json)
+[![Version](https://img.shields.io/npm/v/mediathek-cli.svg)](https://www.npmjs.com/package/mediathek-cli)
+[![Downloads/week](https://img.shields.io/npm/dw/mediathek-cli.svg)](https://www.npmjs.com/package/mediathek-cli)
+[![License](https://img.shields.io/npm/l/mediathek-cli.svg)](https://github.com/maxboettinger/mediathek-cli/blob/master/package.json)
 
 <!-- toc -->
 * [Usage](#usage)
