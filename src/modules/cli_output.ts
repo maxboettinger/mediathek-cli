@@ -68,27 +68,27 @@ export function draw_table(
     api_response.results,
     {
       id: {
-        header: "Entry ID",
+        header: "ID",
         get: (row) =>
           api_response.results.findIndex((x: any) => x.id === row.id) +
           pagination * limit,
       },
-      title: {
-        //minWidth: 7,
+      channel: {
+        minWidth: 10,
       },
       topic: {
         //get: row => row.company && row.company.name
       },
-      channel: {
-        minWidth: 10,
-      },
-      duration: {
-        get: (row: any) => (row.duration / 60).toFixed(2) + "m",
-        //minWidth: 8,
+      title: {
+        //minWidth: 7,
       },
       published: {
         get: (row: any) =>
           moment(row.timestamp, "X").format("DD.MM.YYYY HH:mm"),
+      },
+      duration: {
+        get: (row: any) => (row.duration / 60).toFixed(2) + "m",
+        //minWidth: 8,
       },
     },
     {}
@@ -97,7 +97,7 @@ export function draw_table(
   log(""); // yeah this is probably bad, but easier to identify than "\n"
   log(
     "use " +
-      chalk.bold.italic("media detail {entry id}") +
+      chalk.bold.italic("media detail {ID}") +
       " to view detailed information for an entry"
   );
   log(
