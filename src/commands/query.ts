@@ -8,46 +8,62 @@ export default class Query extends Command {
 
   static examples = ["<%= config.bin %> <%= command.id %>"];
 
+  static args = [
+    {
+      name: "query",
+      required: true,
+      description: ":string - describe what you are searching for",
+    },
+  ];
+
   static flags = {
-    title: Flags.string({ char: "t", description: "title to query" }),
-    topic: Flags.string({ char: "s", description: "topic (sendung) to query" }),
-    channel: Flags.string({ char: "c", description: "channel to query" }),
+    title: Flags.string({
+      char: "t",
+      description:
+        ":string - search for a specific title [e.g. 'Wetten dass...']",
+    }),
+    topic: Flags.string({
+      char: "s",
+      description:
+        ":string - search for a specific topic (Sendung) [e.g. 'tagesschau']",
+    }),
+    channel: Flags.string({
+      char: "c",
+      description: ":string - limit search to a specific channel [e.g. 'ARD']",
+    }),
     limit: Flags.integer({
       char: "l",
-      description: "limit amounts of displayed results",
+      description: ":number - limit search results",
       default: 15,
     }),
     page: Flags.integer({
       char: "p",
-      description: "use pagination for last query",
+      description: ":number - use pagination to view specific result page",
       default: 0,
     }),
     dmin: Flags.integer({
-      description: "minimum duration (in minutes)",
+      description: ":number - minimum duration (in minutes)",
       default: 0,
     }),
     dmax: Flags.integer({
-      description: "maximum duration (in minutes)",
+      description: ":number - maximum duration (in minutes)",
       default: 99999,
     }),
     sortBy: Flags.string({
-      description:
-        "define the parameter for sorting. Supported: timestamp; duration",
+      description: ":string - define what to sort by",
       options: ["timestamp", "duration"],
       default: "timestamp",
     }),
     sortOrder: Flags.string({
-      description: "define the sorting order",
+      description: ":string - define sorting order",
       options: ["desc", "asc"],
       default: "desc",
     }),
     future: Flags.boolean({
-      description: "choose to allow future shows to be included in results",
+      description: ":bool - choose to allow results of future entries",
       default: true,
     }),
   };
-
-  static args = [];
 
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Query);
@@ -55,7 +71,7 @@ export default class Query extends Command {
     //CliUx.ux.action.start("");
 
     // generate query
-    const query = await this.build_query(flags);
+    const query = await this.build_query(flags, args);
 
     // request API with query
     const api_result = await queryApi(query);
@@ -77,7 +93,7 @@ export default class Query extends Command {
   /**
    * build_query
    */
-  public build_query(flags: any) {
+  public build_query(flags: any, args: any) {
     return new Promise((resolve, reject) => {
       const queries = [];
 
@@ -86,11 +102,23 @@ export default class Query extends Command {
           fields: ["title"],
           query: flags.title,
         });
+      } else {
+        // if no explicit title flag is set, use the provided query argument
+        queries.push({
+          fields: ["title"],
+          query: args.query,
+        });
       }
       if (flags.topic != undefined) {
         queries.push({
           fields: ["topic"],
           query: flags.topic,
+        });
+      } else {
+        // if no explicit topic flag is set, use the provided query argument
+        queries.push({
+          fields: ["topic"],
+          query: args.query,
         });
       }
       if (flags.channel != undefined) {
