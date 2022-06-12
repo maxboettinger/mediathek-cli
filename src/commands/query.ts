@@ -66,7 +66,12 @@ export default class Query extends Command {
     draw_table(api_result, flags.page, flags.limit);
 
     // save results in history
-    await save_history(api_result, flags.page, flags.limit);
+    await save_history(
+      api_result,
+      flags.page,
+      flags.limit,
+      this.config.cacheDir
+    );
   }
 
   /**

@@ -21,7 +21,7 @@ export default class Detail extends Command {
     const { args, flags } = await this.parse(Detail);
 
     // read details from history json file
-    const item_detail = await load_history(args.id);
+    const item_detail = await load_history(args.id, this.config.cacheDir);
 
     // print details to terminal
     showDetail(item_detail);

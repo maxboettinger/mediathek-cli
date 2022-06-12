@@ -1,6 +1,5 @@
 const fs = require("fs");
-const homedir = require("os").homedir();
-const path = homedir + "/.mediathek_cli.json";
+const cacheFile = "/.mediathek_cli.json";
 
 let local_obj = {
   config: {
@@ -12,7 +11,8 @@ let local_obj = {
 export function save_history(
   data: any,
   page: number,
-  limit: number
+  limit: number,
+  cacheDir: string
 ): Promise<any> {
   return new Promise(async (resolve, reject) => {
     try {
@@ -25,7 +25,7 @@ export function save_history(
 
       local_obj.history = temp_list;
 
-      fs.writeFileSync(path, JSON.stringify(local_obj));
+      fs.writeFileSync(cacheDir + cacheFile, JSON.stringify(local_obj));
       resolve(true);
     } catch (err) {
       console.error(err);
@@ -34,10 +34,10 @@ export function save_history(
   });
 }
 
-export function load_history(id: number): Promise<any> {
+export function load_history(id: number, cacheDir: string): Promise<any> {
   return new Promise(async (resolve, reject) => {
     try {
-      let json_data = fs.readFileSync(path, "utf8");
+      let json_data = fs.readFileSync(cacheDir + cacheFile, "utf8");
       json_data = JSON.parse(json_data);
 
       let entry = json_data.history.find((item: any) => {
