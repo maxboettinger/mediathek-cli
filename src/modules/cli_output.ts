@@ -60,7 +60,7 @@ export function draw_table(
       chalk.bold(api_response.queryInfo.totalResults) +
       " results found in " +
       chalk.bold(api_response.queryInfo.searchEngineTime) +
-      "s"
+      "ms"
   );
   log(""); // yeah this is probably bad, but easier to identify than "\n"
 
@@ -101,9 +101,9 @@ export function draw_table(
       " to view detailed information for an entry"
   );
   log(
-    "use " +
-      chalk.bold.italic("media query {...your last query} -p {desired page}") +
-      " to use pagination"
+    "add " +
+      chalk.bold.italic("-p {desired page}") +
+      " to your last query in order to use pagination"
   );
   log(""); // yeah this is probably bad, but easier to identify than "\n"
 }
