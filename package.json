@@ -1,15 +1,15 @@
 {
-  "name": "mediathek",
+  "name": "mediathek-cli",
   "version": "0.0.0",
   "description": "OER mediathek-cli",
   "author": "Max @maxboettinger",
   "bin": {
     "media": "./bin/run"
   },
-  "homepage": "https://github.com/maxboettinger/oclif-mediathek",
+  "homepage": "https://github.com/maxboettinger/mediathek-cli",
   "license": "MIT",
   "main": "dist/index.js",
-  "repository": "maxboettinger/oclif-mediathek",
+  "repository": "maxboettinger/mediathek-cli",
   "files": [
     "/bin",
     "/dist",
@@ -65,8 +65,10 @@
   "engines": {
     "node": ">=12.0.0"
   },
-  "bugs": "https://github.com/maxboettinger/oclif-mediathek/issues",
+  "bugs": "https://github.com/maxboettinger/mediathek-clik/issues",
   "keywords": [
+    "mediathek",
+    "OER",
     "oclif"
   ],
   "types": "dist/index.d.ts"
