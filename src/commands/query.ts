@@ -6,7 +6,10 @@ import { queryApi } from "../modules/request";
 export default class Query extends Command {
   static description = "query the mediathek";
 
-  static examples = ["<%= config.bin %> <%= command.id %>"];
+  static examples = [
+    '$ media query tagesschau -c ARD -t "20:00 Uhr"',
+    '$ media query "Wetten, dass..?" -c ZDF --dmin 30',
+  ];
 
   static args = [
     {

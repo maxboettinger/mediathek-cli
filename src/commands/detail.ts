@@ -6,16 +6,18 @@ export default class Detail extends Command {
   static description =
     "show detailed information for a specific mediathek entry";
 
-  static examples = ["<%= config.bin %> <%= command.id %>"];
+  static examples = ["$ media detail 4"];
 
-  static flags = {
-    /*id: Flags.string({
-      char: "i",
-      description: "id of result to display details for",
-    }),*/
-  };
+  static flags = {};
 
-  static args = [{ name: "id" }];
+  static args = [
+    {
+      name: "id",
+      required: true,
+      description:
+        ":number - the respective Entry ID of the last query to show details for",
+    },
+  ];
 
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Detail);
