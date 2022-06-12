@@ -22,7 +22,7 @@
     "@oclif/plugin-plugins": "^2.1.0",
     "axios": "^0.26.0",
     "chalk": "^4.1.2",
-    "moment": "^2.29.1",
+    "moment": "^2.29.3",
     "signale": "^1.4.0"
   },
   "devDependencies": {
