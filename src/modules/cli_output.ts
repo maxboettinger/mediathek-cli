@@ -68,7 +68,7 @@ export function draw_table(
     api_response.results,
     {
       id: {
-        header: "Entry",
+        header: "Entry ID",
         get: (row) =>
           api_response.results.findIndex((x: any) => x.id === row.id) +
           pagination * limit,
