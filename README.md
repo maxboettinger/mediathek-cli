@@ -18,7 +18,7 @@ $ npm install -g mediathek-cli
 $ media COMMAND
 running command...
 $ media (--version)
-mediathek-cli/0.1.0 linux-x64 node-v16.10.0
+mediathek-cli/0.2.0 linux-x64 node-v16.10.0
 $ media --help [COMMAND]
 USAGE
   $ media COMMAND
@@ -29,7 +29,7 @@ USAGE
 <!-- commands -->
 * [`media detail [ID]`](#media-detail-id)
 * [`media help [COMMAND]`](#media-help-command)
-* [`media query`](#media-query)
+* [`media query QUERY`](#media-query-query)
 
 ## `media detail [ID]`
 
@@ -46,7 +46,7 @@ EXAMPLES
   $ media detail
 ```
 
-_See code: [dist/commands/detail.ts](https://github.com/maxboettinger/mediathek-cli/blob/v0.1.0/dist/commands/detail.ts)_
+_See code: [dist/commands/detail.ts](https://github.com/maxboettinger/mediathek-cli/blob/v0.2.0/dist/commands/detail.ts)_
 
 ## `media help [COMMAND]`
 
@@ -68,27 +68,30 @@ DESCRIPTION
 
 _See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.12/src/commands/help.ts)_
 
-## `media query`
+## `media query QUERY`
 
 query the mediathek
 
 ```
 USAGE
-  $ media query [-t <value>] [-s <value>] [-c <value>] [-l <value>] [-p <value>] [--dmin <value>] [--dmax
-    <value>] [--sortBy timestamp|duration] [--sortOrder desc|asc] [--future]
+  $ media query [QUERY] [-t <value>] [-s <value>] [-c <value>] [-l <value>] [-p <value>] [--dmin <value>]
+    [--dmax <value>] [--sortBy timestamp|duration] [--sortOrder desc|asc] [--future]
+
+ARGUMENTS
+  QUERY  :string - describe what you are searching for
 
 FLAGS
-  -c, --channel=<value>  channel to query
-  -l, --limit=<value>    [default: 15] limit amounts of displayed results
-  -p, --page=<value>     use pagination for last query
-  -s, --topic=<value>    topic (sendung) to query
-  -t, --title=<value>    title to query
-  --dmax=<value>         [default: 99999] maximum duration (in minutes)
-  --dmin=<value>         minimum duration (in minutes)
-  --future               choose to allow future shows to be included in results
-  --sortBy=<option>      [default: timestamp] define the parameter for sorting. Supported: timestamp; duration
+  -c, --channel=<value>  :string - limit search to a specific channel [e.g. 'ARD']
+  -l, --limit=<value>    [default: 15] :number - limit search results
+  -p, --page=<value>     :number - use pagination to view specific result page
+  -s, --topic=<value>    :string - search for a specific topic (Sendung) [e.g. 'tagesschau']
+  -t, --title=<value>    :string - search for a specific title [e.g. 'Wetten dass...']
+  --dmax=<value>         [default: 99999] :number - maximum duration (in minutes)
+  --dmin=<value>         :number - minimum duration (in minutes)
+  --future               :bool - choose to allow results of future entries
+  --sortBy=<option>      [default: timestamp] :string - define what to sort by
                          <options: timestamp|duration>
-  --sortOrder=<option>   [default: desc] define the sorting order
+  --sortOrder=<option>   [default: desc] :string - define sorting order
                          <options: desc|asc>
 
 DESCRIPTION
@@ -98,5 +101,5 @@ EXAMPLES
   $ media query
 ```
 
-_See code: [dist/commands/query.ts](https://github.com/maxboettinger/mediathek-cli/blob/v0.1.0/dist/commands/query.ts)_
+_See code: [dist/commands/query.ts](https://github.com/maxboettinger/mediathek-cli/blob/v0.2.0/dist/commands/query.ts)_
 <!-- commandsstop -->
