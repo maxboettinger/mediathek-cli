@@ -3,7 +3,8 @@ import { showDetail } from "../modules/cli_output";
 import { load_history } from "../modules/fs";
 
 export default class Detail extends Command {
-  static description = "describe the command here";
+  static description =
+    "show detailed information for a specific mediathek entry";
 
   static examples = ["<%= config.bin %> <%= command.id %>"];
 

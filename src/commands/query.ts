@@ -1,10 +1,10 @@
-import { Command, Flags } from "@oclif/core";
-import { show_apiResults } from "../modules/cli_output";
+import { Command, Flags, CliUx } from "@oclif/core";
+import { draw_table } from "../modules/cli_output";
 import { save_history } from "../modules/fs";
 import { queryApi } from "../modules/request";
 
 export default class Query extends Command {
-  static description = "describe the command here";
+  static description = "query the mediathek";
 
   static examples = ["<%= config.bin %> <%= command.id %>"];
 
@@ -12,9 +12,30 @@ export default class Query extends Command {
     title: Flags.string({ char: "t", description: "title to query" }),
     topic: Flags.string({ char: "s", description: "topic (sendung) to query" }),
     channel: Flags.string({ char: "c", description: "channel to query" }),
-    limit: Flags.string({
+    limit: Flags.integer({
       char: "l",
       description: "limit amounts of displayed results",
+      default: 15,
+    }),
+    page: Flags.integer({
+      char: "p",
+      description: "use pagination for last query",
+      default: 0,
+    }),
+    sortBy: Flags.string({
+      description:
+        "define the parameter for sorting. Supported: timestamp; duration",
+      options: ["timestamp", "duration"],
+      default: "timestamp",
+    }),
+    sortOrder: Flags.string({
+      description: "define the sorting order",
+      options: ["desc", "asc"],
+      default: "desc",
+    }),
+    future: Flags.boolean({
+      description: "choose to allow future shows to be included in results",
+      default: true,
     }),
   };
 
@@ -23,14 +44,18 @@ export default class Query extends Command {
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Query);
 
+    //CliUx.ux.action.start("");
+
     // generate query
     const query = await this.build_query(flags);
 
     // request API with query
     const api_result = await queryApi(query);
 
+    //CliUx.ux.action.stop("");
+
     // print results to terminal
-    show_apiResults(api_result, 0, flags.limit);
+    draw_table(api_result, flags.page, flags.limit);
 
     // save results in history
     await save_history(api_result);
@@ -64,11 +89,11 @@ export default class Query extends Command {
 
       resolve({
         queries: queries,
-        sortBy: "timestamp",
-        sortOrder: "desc",
-        future: true,
-        offset: 0,
-        //size: 10,
+        sortBy: flags.sortBy,
+        sortOrder: flags.sortOrder,
+        future: flags.future,
+        offset: flags.page * flags.limit,
+        size: flags.limit,
         duration_min: 0,
         duration_max: 99999,
       });

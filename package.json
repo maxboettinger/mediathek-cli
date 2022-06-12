@@ -1,7 +1,7 @@
 {
   "name": "mediathek",
   "version": "0.0.0",
-  "description": "OER cli",
+  "description": "OER mediathek-cli",
   "author": "Max @maxboettinger",
   "bin": {
     "media": "./bin/run"
@@ -47,8 +47,7 @@
     "dirname": "media",
     "commands": "./dist/commands",
     "plugins": [
-      "@oclif/plugin-help",
-      "@oclif/plugin-plugins"
+      "@oclif/plugin-help"
     ],
     "topicSeparator": " ",
     "topics": {
