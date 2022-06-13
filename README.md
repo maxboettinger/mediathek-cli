@@ -1,79 +1,23 @@
 mediathek-cli
 =================
-
-an (under development!) CLI for querying the awesome [MediathekViewWeb](https://github.com/mediathekview/mediathekviewweb) project.
-
 [![Version](https://img.shields.io/npm/v/mediathek-cli.svg)](https://www.npmjs.com/package/mediathek-cli)
 [![Downloads/week](https://img.shields.io/npm/dw/mediathek-cli.svg)](https://www.npmjs.com/package/mediathek-cli)
 [![License](https://img.shields.io/npm/l/mediathek-cli.svg)](https://github.com/maxboettinger/mediathek-cli/blob/master/package.json)
 
-<!-- toc -->
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
-# Usage
-<!-- usage -->
-```sh-session
-$ npm install -g mediathek-cli
-$ media COMMAND
-running command...
-$ media (--version)
-mediathek-cli/0.3.0 linux-x64 node-v16.10.0
-$ media --help [COMMAND]
-USAGE
-  $ media COMMAND
-...
-```
-<!-- usagestop -->
-# Commands
-<!-- commands -->
-* [`media detail ID`](#media-detail-id)
-* [`media help [COMMAND]`](#media-help-command)
-* [`media query QUERY`](#media-query-query)
+an (under development!) CLI for querying the awesome [MediathekViewWeb](https://github.com/mediathekview/mediathekviewweb) project.
 
-## `media detail ID`
 
-show detailed information for a specific mediathek entry
+# Quickstart
 
-```
-USAGE
-  $ media detail [ID]
+There are currently *2* supported commands (```media query``` and ```media detail```). These are meant to be used in *succession*, as ```media detail``` requires a specific *entry id* optained from your last query.
 
-ARGUMENTS
-  ID  :number - the respective Entry ID of the last query to show details for
+### $ media query {query}
+This command allows to query the [MediathekViewWeb](https://github.com/mediathekview/mediathekviewweb) database. It supports similar filters which are implemented as optional flags.
 
-DESCRIPTION
-  show detailed information for a specific mediathek entry
+![MediathekViewWeb](https://abload.de/img/carbon12fjay.png)
 
-EXAMPLES
-  $ media detail 4
-```
-
-_See code: [dist/commands/detail.ts](https://github.com/maxboettinger/mediathek-cli/blob/v0.3.0/dist/commands/detail.ts)_
-
-## `media help [COMMAND]`
-
-Display help for media.
-
-```
-USAGE
-  $ media help [COMMAND] [-n]
-
-ARGUMENTS
-  COMMAND  Command to show help for.
-
-FLAGS
-  -n, --nested-commands  Include all nested commands in the output.
-
-DESCRIPTION
-  Display help for media.
-```
-
-_See code: [@oclif/plugin-help](https://github.com/oclif/plugin-help/blob/v5.1.12/src/commands/help.ts)_
-
-## `media query QUERY`
-
-query the mediathek
+The most basic query only requires a string, describing what you are searching for: ```media query "tagesschau"```.
+More specific searches can be achieved by using flags.
 
 ```
 USAGE
@@ -96,15 +40,44 @@ FLAGS
                          <options: timestamp|duration>
   --sortOrder=<option>   [default: desc] :string - define sorting order
                          <options: desc|asc>
-
-DESCRIPTION
-  query the mediathek
-
-EXAMPLES
-  $ media query tagesschau -c ARD -t "20:00 Uhr"
-
-  $ media query "Wetten, dass..?" -c ZDF --dmin 30
 ```
 
-_See code: [dist/commands/query.ts](https://github.com/maxboettinger/mediathek-cli/blob/v0.3.0/dist/commands/query.ts)_
-<!-- commandsstop -->
+### $ media detail {entry id}
+This command allows to view more information for a single entry. It requires the respective  *media id*, which is displayed for every result of ```media query```.
+
+![MediathekViewWeb](https://abload.de/img/carbon2yxksl.png)
+
+```
+USAGE
+  $ media detail [ID]
+
+ARGUMENTS
+  ID  :number - the respective Entry ID of the last query to show details for
+
+DESCRIPTION
+  show detailed information for a specific mediathek entry
+
+EXAMPLES
+  $ media detail 4
+```
+
+
+
+# Setup
+
+```sh-session
+$ npm install -g mediathek-cli
+$ media COMMAND
+running command...
+$ media (--version)
+mediathek-cli/0.3.0 linux-x64 node-v16.10.0
+$ media --help [COMMAND]
+USAGE
+  $ media COMMAND
+...
+```
+
+
+# Roadmap
+- add support for downloading media
+- overhaul inspection of a single result
