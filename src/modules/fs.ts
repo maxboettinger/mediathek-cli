@@ -46,7 +46,8 @@ export function load_history(id: number, cacheDir: string): Promise<any> {
 
       resolve(entry);
     } catch (err) {
-      console.error(err);
+      //console.error(err);
+      console.error("No entry found for provided {entry id} (" + id + ")");
       reject(err);
     }
   });
