@@ -1,6 +1,6 @@
 {
   "name": "mediathek-cli",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "query databases of german(-speaking) publicly funded TV-Stations (OER) via this simple CLI tool.",
   "author": "Max @maxboettinger",
   "bin": {
