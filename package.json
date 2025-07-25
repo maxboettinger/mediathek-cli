@@ -18,7 +18,7 @@
   ],
   "dependencies": {
     "@oclif/core": "^1",
-    "@oclif/plugin-help": "^5",
+    "@oclif/plugin-help": "^6",
     "@oclif/plugin-plugins": "^2.4.7",
     "@types/inquirer": "^9.0.7",
     "axios": "^0.27.2",
