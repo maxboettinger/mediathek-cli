@@ -1,72 +1,68 @@
-import { Command, Flags, Args } from "@oclif/core";
-import inquirer from "inquirer";
-import { showDetail } from "../modules/cli_output";
-import { load_history } from "../modules/fs";
-import { downloadFile } from "../modules/request";
+import {Args, Command} from '@oclif/core';
+import inquirer from 'inquirer';
+
+import {loadHistory} from '../modules/fs';
+import {downloadFile} from '../modules/request';
 
 export default class Download extends Command {
-  static description = "download a specific mediathek entry";
-
-  static examples = ["$ media download 4"];
-
-  static flags = {};
-
   static args = {
     id: Args.integer({
-      required: true,
       description:
-        ":number - the respective Entry ID of the last query to download",
+        ':number - the respective Entry ID of the last query to download',
+      required: true,
     }),
   };
+  static description = 'download a specific mediathek entry';
+  static examples = ['$ media download 4'];
+  static flags = {};
 
   public async run(): Promise<void> {
-    const { args, flags } = await this.parse(Download);
+    const {args} = await this.parse(Download);
 
     // read details from history json file
-    const item_detail = await load_history(args.id, this.config.cacheDir);
+    const itemDetail = await loadHistory(args.id as number, this.config.cacheDir);
 
     // check if provided id can be found in history
-    if (!item_detail) {
-      console.error("No entry found for provided id " + args.id + "!");
+    if (!itemDetail) {
+      console.error('No entry found for provided id ' + args.id + '!');
       return;
     }
 
     // initialize path variables
-    let downloadPath = "";
-    const defaultDownloadPath =
-      this.config.home + "/" + item_detail.url_video_hd.split("/").pop();
+    let downloadPath = '';
+    const defaultDownloadPath
+      = this.config.home + '/' + itemDetail.url_video_hd.split('/').pop();
 
     // prompt for download location
-    let responses: any = await inquirer.prompt([
+    const responses = await inquirer.prompt([
       {
-        name: "downloadChoice",
-        message: "Where should the file be saved?",
-        type: "list",
         choices: [
-          { name: "default (" + defaultDownloadPath + ")" },
-          { name: "custom path" },
+          {name: 'default (' + defaultDownloadPath + ')'},
+          {name: 'custom path'},
         ],
+        message: 'Where should the file be saved?',
+        name: 'downloadChoice',
+        type: 'list',
       },
     ]);
 
     // handle customDownloadPath
-    if (responses.downloadChoice == "custom path") {
+    if (responses.downloadChoice === 'custom path') {
       const customPathResponse = await inquirer.prompt([
         {
-          name: "customPath",
-          message: "Enter custom path:",
-          type: "input",
+          message: 'Enter custom path:',
+          name: 'customPath',
+          type: 'input',
         },
       ]);
       downloadPath = customPathResponse.customPath;
-    }
-    // handle defaultDownloadPath
-    else {
+    } else {
+      // handle defaultDownloadPath
       downloadPath = defaultDownloadPath;
     }
 
-    console.log("");
+    console.log('');
 
-    await downloadFile(downloadPath, item_detail);
+    await downloadFile(downloadPath, itemDetail);
   }
 }

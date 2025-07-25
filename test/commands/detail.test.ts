@@ -1,17 +1,14 @@
-import {expect, test} from '@oclif/test'
+import {runCommand} from '@oclif/test'
+import {expect} from 'chai'
 
 describe('detail', () => {
-  test
-  .stdout()
-  .command(['detail'])
-  .it('runs hello', ctx => {
-    expect(ctx.stdout).to.contain('hello world')
+  it('should show error when no ID provided', async () => {
+    const {error} = await runCommand(['detail'])
+    expect(error?.message).to.contain('Missing required arg')
   })
 
-  test
-  .stdout()
-  .command(['detail', '--name', 'jeff'])
-  .it('runs hello --name jeff', ctx => {
-    expect(ctx.stdout).to.contain('hello jeff')
+  it('should show error when invalid ID provided', async () => {
+    const {error} = await runCommand(['detail', '999'])
+    expect(error?.message).to.contain('No entry found')
   })
 })

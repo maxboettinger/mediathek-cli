@@ -1,30 +1,28 @@
-import { Command, Flags, Args } from "@oclif/core";
-import { showDetail } from "../modules/cli_output";
-import { load_history } from "../modules/fs";
+import {Args, Command} from '@oclif/core';
+
+import {showDetail} from '../modules/cli-output';
+import {loadHistory} from '../modules/fs';
 
 export default class Detail extends Command {
-  static description =
-    "show detailed information for a specific mediathek entry";
-
-  static examples = ["$ media detail 4"];
-
-  static flags = {};
-
   static args = {
     id: Args.integer({
-      required: true,
       description:
-        ":number - the respective Entry ID of the last query to show details for",
+        ':number - the respective Entry ID of the last query to show details for',
+      required: true,
     }),
   };
+  static description
+    = 'show detailed information for a specific mediathek entry';
+  static examples = ['$ media detail 4'];
+  static flags = {};
 
   public async run(): Promise<void> {
-    const { args, flags } = await this.parse(Detail);
+    const {args} = await this.parse(Detail);
 
     // read details from history json file
-    const item_detail = await load_history(args.id, this.config.cacheDir);
+    const itemDetail = await loadHistory(args.id as number, this.config.cacheDir);
 
     // print details to terminal
-    showDetail(item_detail);
+    showDetail(itemDetail);
   }
 }

@@ -1,59 +1,63 @@
-const fs = require("fs");
-const cacheFile = "/.mediathek_cli.json";
+import {existsSync, mkdirSync} from 'node:fs';
+import fs from 'node:fs/promises';
 
-let local_obj = {
+import type {ApiResponse, CacheData, MediaEntry} from '../types';
+
+const CACHE_FILE = '/.mediathek_cli.json';
+
+const defaultCacheData: CacheData = {
   config: {
-    path_download: "",
+    pathDownload: '',
   },
   history: [],
 };
 
-export function save_history(
-  data: any,
+export async function saveHistory(
+  data: ApiResponse,
   page: number,
   limit: number,
-  cacheDir: string
-): Promise<any> {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let temp_list = data.results;
+  cacheDir: string,
+): Promise<boolean> {
+  try {
+    const tempList = data.results;
 
-      // append entry id's to results
-      for (let i = 0; i < temp_list.length; i++) {
-        temp_list[i]["local_id"] = i + page * limit;
-      }
-
-      local_obj.history = temp_list;
-
-      // Create cache directory if it doesn't exist
-      if (!fs.existsSync(cacheDir)) {
-        fs.mkdirSync(cacheDir, { recursive: true });
-      }
-
-      fs.writeFileSync(cacheDir + cacheFile, JSON.stringify(local_obj));
-      resolve(true);
-    } catch (err) {
-      console.error(err);
-      reject(false);
+    // append entry id's to results
+    for (const [i, element] of tempList.entries()) {
+      element.localId = i + (page * limit);
     }
-  });
+
+    const cacheData: CacheData = {
+      ...defaultCacheData,
+      history: tempList,
+    };
+
+    // Create cache directory if it doesn't exist
+    if (!existsSync(cacheDir)) {
+      mkdirSync(cacheDir, {recursive: true});
+    }
+
+    await fs.writeFile(cacheDir + CACHE_FILE, JSON.stringify(cacheData));
+    return true;
+  } catch (error) {
+    console.error(error);
+    return false;
+  }
 }
 
-export function load_history(id: number, cacheDir: string): Promise<any> {
-  return new Promise(async (resolve, reject) => {
-    try {
-      let json_data = fs.readFileSync(cacheDir + cacheFile, "utf8");
-      json_data = JSON.parse(json_data);
+export async function loadHistory(id: number, cacheDir: string): Promise<MediaEntry> {
+  try {
+    const jsonData = await fs.readFile(cacheDir + CACHE_FILE, 'utf8');
+    const parsedData: CacheData = JSON.parse(jsonData);
 
-      let entry = json_data.history.find((item: any) => {
-        return item.local_id == id;
-      });
+    const entry = parsedData.history.find(item => item.localId === id);
 
-      resolve(entry);
-    } catch (err) {
-      //console.error(err);
-      console.error("No entry found for provided {entry id} (" + id + ")");
-      reject(err);
+    if (!entry) {
+      throw new Error(`No entry found for provided entry id (${id})`);
     }
-  });
+
+    return entry;
+  } catch (error) {
+    console.error(`No entry found for provided entry id (${id})`);
+    throw error;
+  }
 }

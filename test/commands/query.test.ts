@@ -1,17 +1,14 @@
-import {expect, test} from '@oclif/test'
+import {runCommand} from '@oclif/test'
+import {expect} from 'chai'
 
 describe('query', () => {
-  test
-  .stdout()
-  .command(['query'])
-  .it('runs hello', ctx => {
-    expect(ctx.stdout).to.contain('hello world')
+  it('should show error when no query provided', async () => {
+    const {error} = await runCommand(['query'])
+    expect(error?.message).to.contain('Missing required arg')
   })
 
-  test
-  .stdout()
-  .command(['query', '--name', 'jeff'])
-  .it('runs hello --name jeff', ctx => {
-    expect(ctx.stdout).to.contain('hello jeff')
+  it('should execute query with search term', async () => {
+    const {stdout} = await runCommand(['query', 'test', '-l', '1'])
+    expect(stdout).to.contain('Showing page')
   })
 })
