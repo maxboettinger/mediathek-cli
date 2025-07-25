@@ -3,7 +3,7 @@ import {
 } from '@oclif/core';
 import chalk from 'chalk';
 
-import type {ApiQuery, QueryArgs, QueryFlags} from '../types';
+import type {ApiQuery, QueryArgs, QueryFlags, SearchContext} from '../types';
 
 import {ResultsTable, handleKeypress, renderDetail, waitForKey} from '../modules/core-ui';
 import {DownloadManager} from '../modules/core-download';
@@ -116,7 +116,11 @@ export default class Query extends Command {
         case 'search':
           const Search = await import('./search');
           const searchCmd = new Search.default([], this.config);
-          await searchCmd.run();
+          const searchContext: SearchContext = {
+            flags: flags as QueryFlags,
+            args: args as QueryArgs
+          };
+          await searchCmd.run(searchContext);
           return;
         case 'quit':
           return;

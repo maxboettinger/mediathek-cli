@@ -1,1 +1,1 @@
-{"root":["./src/index.ts","./src/types.ts","./src/commands/detail.ts","./src/commands/download.ts","./src/commands/query.ts","./src/modules/cli-output.ts","./src/modules/fs.ts","./src/modules/request.ts"],"version":"5.8.3"}
+{"root":["./src/index.ts","./src/types.ts","./src/commands/detail.ts","./src/commands/download.ts","./src/commands/query.ts","./src/commands/search.ts","./src/modules/cli-output.ts","./src/modules/core-download.ts","./src/modules/core-ui.ts","./src/modules/fs.ts","./src/modules/request.ts"],"version":"5.8.3"}

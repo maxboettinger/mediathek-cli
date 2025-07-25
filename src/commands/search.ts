@@ -1,7 +1,7 @@
 import {Command, ux} from '@oclif/core';
 import chalk from 'chalk';
 
-import type {ApiQuery} from '../types';
+import type {ApiQuery, SearchContext, QueryFlags, QueryArgs} from '../types';
 import {queryApi} from '../modules/request';
 import {saveHistory} from '../modules/fs';
 import {ResultsTable, handleKeypress, renderDetail, waitForKey} from '../modules/core-ui';
@@ -12,9 +12,19 @@ export default class Search extends Command {
   static examples = ['$ media search'];
   static flags = {};
 
-  public async run(): Promise<void> {
+  private searchContext?: SearchContext;
+
+  public async run(context?: SearchContext): Promise<void> {
+    this.searchContext = context;
+    
     console.clear();
     console.log(chalk.bold.blue('Search Media'));
+    
+    if (context) {
+      console.log(chalk.gray('Current filters:'));
+      this.displayCurrentFilters(context);
+    }
+    
     console.log();
     
     const searchTerm = await this.getSearchTerm();
@@ -55,7 +65,53 @@ export default class Search extends Command {
     });
   }
 
+  private displayCurrentFilters(context: SearchContext): void {
+    const filters = [];
+    if (context.flags.channel) filters.push(`Channel: ${chalk.cyan(context.flags.channel)}`);
+    if (context.flags.title) filters.push(`Title: ${chalk.white(context.flags.title)}`);
+    if (context.flags.topic) filters.push(`Topic: ${chalk.white(context.flags.topic)}`);
+    if (context.flags.dmin > 0) filters.push(`Min duration: ${chalk.yellow(`${context.flags.dmin}min`)}`);
+    if (context.flags.dmax < 99_999) filters.push(`Max duration: ${chalk.yellow(`${context.flags.dmax}min`)}`);
+    
+    console.log(`  ${filters.join(' • ')}`);
+  }
+
   private buildQuery(searchTerm: string): ApiQuery {
+    const context = this.searchContext;
+    
+    if (context) {
+      // Use preserved context but update search term
+      const queries = [];
+      
+      if (context.flags.title === undefined) {
+        queries.push({fields: ['title'], query: searchTerm});
+      } else {
+        queries.push({fields: ['title'], query: context.flags.title});
+      }
+      
+      if (context.flags.topic === undefined) {
+        queries.push({fields: ['topic'], query: searchTerm});
+      } else {
+        queries.push({fields: ['topic'], query: context.flags.topic});
+      }
+      
+      if (context.flags.channel !== undefined) {
+        queries.push({fields: ['channel'], query: context.flags.channel});
+      }
+      
+      return {
+        durationMax: context.flags.dmax * 60,
+        durationMin: context.flags.dmin * 60,
+        future: context.flags.future,
+        offset: context.flags.page * context.flags.limit,
+        queries,
+        size: context.flags.limit,
+        sortBy: context.flags.sortBy,
+        sortOrder: context.flags.sortOrder,
+      };
+    }
+    
+    // Default behavior for new searches
     return {
       durationMax: 99_999 * 60,
       durationMin: 0,

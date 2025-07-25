@@ -71,3 +71,8 @@ export interface DetailArgs {
 export interface DownloadArgs {
   id: number;
 }
+
+export interface SearchContext {
+  flags: QueryFlags;
+  args: QueryArgs;
+}
