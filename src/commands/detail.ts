@@ -1,4 +1,4 @@
-import { Command, Flags } from "@oclif/core";
+import { Command, Flags, Args } from "@oclif/core";
 import { showDetail } from "../modules/cli_output";
 import { load_history } from "../modules/fs";
 
@@ -10,14 +10,13 @@ export default class Detail extends Command {
 
   static flags = {};
 
-  static args = [
-    {
-      name: "id",
+  static args = {
+    id: Args.integer({
       required: true,
       description:
         ":number - the respective Entry ID of the last query to show details for",
-    },
-  ];
+    }),
+  };
 
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Detail);

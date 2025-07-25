@@ -1,6 +1,6 @@
 import axios from "axios";
-import { CliUx } from "@oclif/core";
-import * as chalk from "chalk";
+import { ux } from "@oclif/core";
+import chalk from "chalk";
 const https = require("https");
 const fs = require("fs");
 const api_url = "https://mediathekviewweb.de/api/query";
@@ -34,7 +34,7 @@ export function downloadFile(
   item_detail: any
 ): Promise<any> {
   return new Promise(async (resolve, reject) => {
-    CliUx.ux.action.start("downloading");
+    ux.action.start("downloading");
 
     https.get(item_detail.url_video_hd, (res: any) => {
       const writeStream = fs.createWriteStream(downloadPath);
@@ -43,7 +43,7 @@ export function downloadFile(
 
       writeStream.on("finish", () => {
         writeStream.close();
-        CliUx.ux.action.stop("done!");
+        ux.action.stop("done!");
         console.log("\nsaved as " + chalk.bold(downloadPath) + "\n");
         resolve(true);
       });

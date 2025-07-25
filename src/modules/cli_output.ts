@@ -1,6 +1,6 @@
-import { CliUx } from "@oclif/core";
-import * as moment from "moment";
-import * as chalk from "chalk";
+import moment from "moment";
+import chalk from "chalk";
+import Table from "cli-table3";
 const log = console.log;
 
 export function draw_table(
@@ -46,36 +46,23 @@ export function draw_table(
   );
   log(""); // yeah this is probably bad, but easier to identify than "\n"
 
-  CliUx.ux.table(
-    api_response.results,
-    {
-      id: {
-        header: "ID",
-        get: (row) =>
-          api_response.results.findIndex((x: any) => x.id === row.id) +
-          pagination * limit,
-      },
-      channel: {
-        minWidth: 8,
-      },
-      topic: {
-        //get: row => row.company && row.company.name
-      },
-      title: {
-        //minWidth: 50,
-      },
-      published: {
-        get: (row: any) =>
-          moment(row.timestamp, "X").format("DD.MM.YYYY HH:mm"),
-        minWidth: 19,
-      },
-      duration: {
-        get: (row: any) => (row.duration / 60).toFixed(2) + "m",
-        //minWidth: 8,
-      },
-    },
-    {}
-  );
+  const table = new Table({
+    head: ['ID', 'Channel', 'Topic', 'Title', 'Published', 'Duration'],
+    colWidths: [5, 10, 20, 50, 17, 8]
+  });
+
+  api_response.results.forEach((row: any, index: number) => {
+    table.push([
+      (index + pagination * limit).toString(),
+      row.channel,
+      row.topic,
+      row.title,
+      moment(row.timestamp, "X").format("DD.MM.YYYY HH:mm"),
+      (row.duration / 60).toFixed(2) + "m"
+    ]);
+  });
+
+  log(table.toString());
 
   log(""); // yeah this is probably bad, but easier to identify than "\n"
   log(

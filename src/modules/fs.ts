@@ -25,6 +25,11 @@ export function save_history(
 
       local_obj.history = temp_list;
 
+      // Create cache directory if it doesn't exist
+      if (!fs.existsSync(cacheDir)) {
+        fs.mkdirSync(cacheDir, { recursive: true });
+      }
+
       fs.writeFileSync(cacheDir + cacheFile, JSON.stringify(local_obj));
       resolve(true);
     } catch (err) {

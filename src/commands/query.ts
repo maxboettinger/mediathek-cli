@@ -1,4 +1,4 @@
-import { Command, Flags, CliUx } from "@oclif/core";
+import { Command, Flags, Args, ux } from "@oclif/core";
 import { draw_table } from "../modules/cli_output";
 import { save_history } from "../modules/fs";
 import { queryApi } from "../modules/request";
@@ -11,13 +11,12 @@ export default class Query extends Command {
     '$ media query "Wetten, dass..?" -c ZDF --dmin 30',
   ];
 
-  static args = [
-    {
-      name: "query",
+  static args = {
+    query: Args.string({
       required: true,
       description: ":string - describe what you are searching for",
-    },
-  ];
+    }),
+  };
 
   static flags = {
     title: Flags.string({
@@ -71,7 +70,7 @@ export default class Query extends Command {
   public async run(): Promise<void> {
     const { args, flags } = await this.parse(Query);
 
-    //CliUx.ux.action.start("");
+    //ux.action.start("");
 
     // generate query
     const query = await this.build_query(flags, args);
@@ -79,7 +78,7 @@ export default class Query extends Command {
     // request API with query
     const api_result = await queryApi(query);
 
-    //CliUx.ux.action.stop("");
+    //ux.action.stop("");
 
     // print results to terminal
     draw_table(api_result, flags.page, flags.limit);
