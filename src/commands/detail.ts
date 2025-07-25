@@ -1,6 +1,6 @@
 import {Args, Command} from '@oclif/core';
 
-import {showDetail} from '../modules/cli-output';
+import {renderDetail, waitForKey} from '../modules/core-ui';
 import {loadHistory} from '../modules/fs';
 
 export default class Detail extends Command {
@@ -19,10 +19,8 @@ export default class Detail extends Command {
   public async run(): Promise<void> {
     const {args} = await this.parse(Detail);
 
-    // read details from history json file
     const itemDetail = await loadHistory(args.id as number, this.config.cacheDir);
-
-    // print details to terminal
-    showDetail(itemDetail);
+    renderDetail(itemDetail);
+    await waitForKey();
   }
 }

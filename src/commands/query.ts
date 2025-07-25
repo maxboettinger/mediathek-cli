@@ -1,10 +1,12 @@
 import {
   Args, Command, Flags,
 } from '@oclif/core';
+import chalk from 'chalk';
 
 import type {ApiQuery, QueryArgs, QueryFlags} from '../types';
 
-import {drawTable} from '../modules/cli-output';
+import {ResultsTable, handleKeypress, renderDetail, waitForKey} from '../modules/core-ui';
+import {DownloadManager} from '../modules/core-download';
 import {saveHistory} from '../modules/fs';
 import {queryApi} from '../modules/request';
 
@@ -72,22 +74,60 @@ export default class Query extends Command {
   public async run(): Promise<void> {
     const {args, flags} = await this.parse(Query);
 
-    // generate query
     const query = this.buildQuery(flags as QueryFlags, args as QueryArgs);
-
-    // request API with query
     const apiResult = await queryApi(query);
 
-    // print results to terminal
-    drawTable(apiResult, flags.page, flags.limit);
+    if (apiResult.results.length === 0) {
+      this.log(chalk.yellow('No results found'));
+      return;
+    }
 
-    // save results in history
-    await saveHistory(
-      apiResult,
-      flags.page,
-      flags.limit,
-      this.config.cacheDir,
-    );
+    const table = new ResultsTable(apiResult);
+    await saveHistory(apiResult, flags.page, flags.limit, this.config.cacheDir);
+
+    while (true) {
+      await table.render();
+      const key = await handleKeypress();
+      const selected = table.getSelected();
+
+      switch (key) {
+        case 'up':
+          table.moveUp();
+          break;
+        case 'down':
+          table.moveDown();
+          break;
+        case 'view':
+          if (selected) {
+            renderDetail(selected.data);
+            await waitForKey();
+          }
+          break;
+        case 'download':
+          if (selected) {
+            const downloader = new DownloadManager(selected.data);
+            const quality = await downloader.selectQuality();
+            if (quality) {
+              await downloader.download(quality);
+              await waitForKey();
+            }
+          }
+          break;
+        case 'search':
+          const Search = await import('./search');
+          const searchCmd = new Search.default([], this.config);
+          await searchCmd.run();
+          return;
+        case 'quit':
+          return;
+        case 'select':
+          if (selected) {
+            renderDetail(selected.data);
+            await waitForKey();
+          }
+          break;
+      }
+    }
   }
 
   /**
