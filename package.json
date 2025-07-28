@@ -19,7 +19,7 @@
   "dependencies": {
     "@oclif/core": "^4.5.2",
     "@oclif/plugin-help": "^6.2.31",
-    "@oclif/plugin-plugins": "^5.4.45",
+    "@oclif/plugin-plugins": "^5.4.46",
     "@types/inquirer": "^9.0.7",
     "inquirer": "^9.3.7",
     "axios": "^1.11.0",
