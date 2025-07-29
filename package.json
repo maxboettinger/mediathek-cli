@@ -35,7 +35,7 @@
     "chai": "^5.1.2",
     "eslint": "^9.31.0",
     "eslint-config-oclif": "^6.0.87",
-    "globby": "^14.0.2",
+    "globby": "^14.1.0",
     "mocha": "^11.7.1",
     "oclif": "^4.22.5",
     "shx": "^0.3.4",
