@@ -19,7 +19,7 @@
   "dependencies": {
     "@oclif/core": "^4.5.2",
     "@oclif/plugin-help": "^6.2.32",
-    "@oclif/plugin-plugins": "^5.4.45",
+    "@oclif/plugin-plugins": "^5.4.46",
     "@types/inquirer": "^9.0.8",
     "inquirer": "^9.3.7",
     "axios": "^1.11.0",
@@ -34,7 +34,7 @@
     "@types/node": "^24.1.0",
     "chai": "^5.1.2",
     "eslint": "^9.31.0",
-    "eslint-config-oclif": "^6.0.87",
+    "eslint-config-oclif": "^6.0.89",
     "globby": "^14.1.0",
     "mocha": "^11.7.1",
     "oclif": "^4.22.5",
