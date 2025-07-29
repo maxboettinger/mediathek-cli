@@ -267,3 +267,50 @@ export async function waitForKey(): Promise<void> {
     stdin.once('data', onData);
   });
 }
+
+// Centralized navigation logic to eliminate duplication
+export async function handleTableNavigation(
+  table: ResultsTable,
+  onRefineSearch?: () => Promise<void>
+): Promise<void> {
+  while (true) {
+    await table.render();
+    const key = await handleKeypress();
+    const selected = table.getSelected();
+
+    switch (key) {
+      case 'up':
+        table.moveUp();
+        break;
+      case 'down':
+        table.moveDown();
+        break;
+      case 'view':
+      case 'select':
+        if (selected) {
+          renderDetail(selected.data);
+          await waitForKey();
+        }
+        break;
+      case 'download':
+        if (selected) {
+          const {DownloadManager} = await import('./core-download');
+          const downloader = new DownloadManager(selected.data);
+          const quality = await downloader.selectQuality();
+          if (quality) {
+            await downloader.download(quality);
+            await waitForKey();
+          }
+        }
+        break;
+      case 'search':
+        if (onRefineSearch) {
+          await onRefineSearch();
+          return;
+        }
+        break;
+      case 'quit':
+        return;
+    }
+  }
+}
