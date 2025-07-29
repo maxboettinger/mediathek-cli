@@ -20,7 +20,7 @@
     "@oclif/core": "^4.5.2",
     "@oclif/plugin-help": "^6.2.32",
     "@oclif/plugin-plugins": "^5.4.46",
-    "@types/inquirer": "^9.0.7",
+    "@types/inquirer": "^9.0.8",
     "inquirer": "^9.3.7",
     "axios": "^1.11.0",
     "chalk": "^5.4.1",
