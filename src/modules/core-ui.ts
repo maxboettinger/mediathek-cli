@@ -68,6 +68,19 @@ export class ResultsTable {
     console.log(`${chalk.gray('Results')} ${chalk.white(`${start}-${end}`)} ${chalk.gray('of')} ${chalk.white(this.apiResponse.queryInfo.totalResults)} ${chalk.gray(`(${this.apiResponse.queryInfo.searchEngineTime}ms)`)}`);
     console.log();
 
+    // Table header
+    const separator = chalk.gray('│');
+    const headerPrefix = '  ';
+    const headerId = chalk.gray('ID '.padEnd(4));
+    const headerChannel = chalk.gray('Channel'.padEnd(7));
+    const headerTime = chalk.gray('Date  Time'.padEnd(11));
+    const headerDuration = chalk.gray('Dur '.padStart(4));
+    const headerSizes = chalk.gray('File Sizes'.padEnd(20));
+    const headerTitle = chalk.gray('Title');
+    
+    console.log(`${headerPrefix}${headerId} ${separator} ${headerChannel} ${separator} ${headerTime} ${separator} ${headerDuration} ${separator} ${headerSizes} ${separator} ${headerTitle}`);
+    console.log(`${headerPrefix}${chalk.gray('────')} ${separator} ${chalk.gray('───────')} ${separator} ${chalk.gray('───────────')} ${separator} ${chalk.gray('────')} ${separator} ${chalk.gray('────────────────────')} ${separator} ${chalk.gray('─────')}`);
+
     // Rows
     const currentPageRows = this.getCurrentPage();
     
@@ -90,24 +103,27 @@ export class ResultsTable {
     const sizes = await this.getFileSizes(data);
     const sizeInfo = this.formatSizeInfo(sizes);
     
-    const id = chalk.gray(`[${row.id}]`);
-    const channel = chalk.cyan(data.channel.padEnd(8));
+    // Format columns with fixed widths
+    const id = chalk.gray(`[${row.id.toString().padStart(2)}]`);
+    const channel = chalk.cyan(data.channel.substring(0, 7).padEnd(7));
     const time = chalk.gray(moment(data.timestamp, 'X').format('DD.MM HH:mm'));
-    const duration = chalk.yellow(`${Math.round(data.duration / 60)}m`);
+    const duration = chalk.yellow(`${Math.round(data.duration / 60)}m`.padStart(4));
     
     let title = data.title;
-    if (title.length > 50) {
-      title = title.substring(0, 47) + '...';
+    if (title.length > 45) {
+      title = title.substring(0, 42) + '...';
     }
     
     if (isSelected) {
       title = chalk.bold.white(title);
     }
     
-    console.log(`${prefix} ${id} ${channel} ${time} ${duration.padEnd(4)} ${sizeInfo} ${title}`);
+    // Create table-like formatting with separators
+    const separator = chalk.gray('│');
+    console.log(`${prefix} ${id} ${separator} ${channel} ${separator} ${time} ${separator} ${duration} ${separator} ${sizeInfo} ${separator} ${title}`);
     
     if (isSelected && data.topic !== data.title) {
-      console.log(`   ${chalk.gray('from')} ${chalk.italic(data.topic)}`);
+      console.log(`   ${chalk.gray('└─ from')} ${chalk.italic(data.topic)}`);
     }
   }
 
@@ -154,13 +170,17 @@ export class ResultsTable {
 export async function handleKeypress(): Promise<string> {
   return new Promise((resolve) => {
     const stdin = process.stdin;
-    stdin.setRawMode(true);
+    if (stdin.isTTY) {
+      stdin.setRawMode(true);
+    }
     stdin.resume();
     stdin.setEncoding('utf8');
     
     const onData = (key: string) => {
       stdin.removeListener('data', onData);
-      stdin.setRawMode(false);
+      if (stdin.isTTY) {
+        stdin.setRawMode(false);
+      }
       stdin.pause();
       
       // Handle different key combinations
@@ -229,17 +249,68 @@ export function renderDetail(data: MediaEntry): void {
 export async function waitForKey(): Promise<void> {
   return new Promise((resolve) => {
     const stdin = process.stdin;
-    stdin.setRawMode(true);
+    if (stdin.isTTY) {
+      stdin.setRawMode(true);
+    }
     stdin.resume();
     stdin.setEncoding('utf8');
     
     const onData = () => {
       stdin.removeListener('data', onData);
-      stdin.setRawMode(false);
+      if (stdin.isTTY) {
+        stdin.setRawMode(false);
+      }
       stdin.pause();
       resolve();
     };
     
     stdin.once('data', onData);
   });
+}
+
+// Centralized navigation logic to eliminate duplication
+export async function handleTableNavigation(
+  table: ResultsTable,
+  onRefineSearch?: () => Promise<void>
+): Promise<void> {
+  while (true) {
+    await table.render();
+    const key = await handleKeypress();
+    const selected = table.getSelected();
+
+    switch (key) {
+      case 'up':
+        table.moveUp();
+        break;
+      case 'down':
+        table.moveDown();
+        break;
+      case 'view':
+      case 'select':
+        if (selected) {
+          renderDetail(selected.data);
+          await waitForKey();
+        }
+        break;
+      case 'download':
+        if (selected) {
+          const {DownloadManager} = await import('./core-download');
+          const downloader = new DownloadManager(selected.data);
+          const quality = await downloader.selectQuality();
+          if (quality) {
+            await downloader.download(quality);
+            await waitForKey();
+          }
+        }
+        break;
+      case 'search':
+        if (onRefineSearch) {
+          await onRefineSearch();
+          return;
+        }
+        break;
+      case 'quit':
+        return;
+    }
+  }
 }
