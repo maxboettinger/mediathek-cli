@@ -34,7 +34,7 @@
     "@types/node": "^24.1.0",
     "chai": "^5.2.1",
     "eslint": "^9.32.0",
-    "eslint-config-oclif": "^6.0.89",
+    "eslint-config-oclif": "^6.0.90",
     "globby": "^14.1.0",
     "mocha": "^11.7.1",
     "oclif": "^4.22.5",
